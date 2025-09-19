@@ -1,0 +1,12 @@
+{
+  "name": "expense-tracker-cli",
+  "version": "1.0.0",
+  "description": "an expense tracker CLI project",
+  "license": "ISC",
+  "author": "",
+  "type": "commonjs",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}
