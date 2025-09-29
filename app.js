@@ -32,6 +32,8 @@ async function run() {
                     case "1":
                         addExpense();
                         break;
+                    case "2":
+                        askUser("Enter any value to return to menu",functions.getJSON(expensesList),["id","name","amount"]).then(()=>{run()});
                     case "5":
                         run();
                     default:
@@ -46,7 +48,9 @@ async function run() {
                     case "1":
                         addCategory();
                         break;
-                
+                    case "2":
+                        askUser("Enter any value to return to menu",functions.getJSON(categoryList),["id","name"]).then(()=>{run()});
+
                     default:
                         break;
                 }
@@ -64,9 +68,9 @@ async function run() {
 })
 }
 
-async function askUser(question,options=[]) {
+async function askUser(question,options=[],properties=[]) {
     return new Promise((resolve)=>{
-        rl.question(`${question}\n${options.length > 0 ? "\n"+ options.map(object=>{return object.id+"."+object.name}).join("\n")+"\n":""}`,
+        rl.question(`${question}\n${options.length > 0 ? "\n"+ options.map(object=>{return functions.getProperties(object,properties)}).join("\n")+"\n":""}`,
             (answer)=>{resolve(answer)
         })
     })
@@ -75,7 +79,7 @@ async function addExpense() {
     console.clear();
     let expName = await askUser("Write the name of the new expense");
     let expDesc = await askUser("Write a description for the new expense");
-    let expCat = await askUser("select a category(number) for the new expense",functions.getJSON(categoryList));
+    let expCat = await askUser("select a category(number) for the new expense",functions.getJSON(categoryList),["id","name"]);
     let expAmount = await askUser("Write the amount($) of the new expense");
     let expense = new expenseImports.Expense(expName,expDesc,expCat,expAmount);
     functions.add(expensesList,expense,"Expense")

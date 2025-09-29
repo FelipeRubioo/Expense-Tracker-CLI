@@ -40,4 +40,12 @@ function getJSON(file){
     const data = JSON.parse(fs.readFileSync(file).toString());
     return data;
 }
-module.exports = { generateId,add,getAll,getJSON }
+
+function getProperties(object,properties){
+    let objProperties = "";
+    for (let i = 0; i < properties.length; i++) {
+        objProperties += object[properties[i]]+"\t";
+    }
+    return objProperties
+}
+module.exports = { generateId,add,getAll,getJSON,getProperties }
