@@ -11,7 +11,7 @@ const rl = readline.createInterface({
     input: process.stdin,
     output: process.stdout
 });
-  
+
 async function run() {
     if (!fs.existsSync('./data')) {
         fs.mkdirSync('./data')
@@ -33,7 +33,11 @@ async function run() {
                         addExpense();
                         break;
                     case "2":
-                        askUser("Enter any value to return to menu",functions.getJSON(expensesList),["id","name","amount"]).then(()=>{run()});
+                        functions.showAll(rl,"Enter any value to return to menu",functions.getJSON(expensesList),["id","name","desc","idcategory","amount"],categoryList).then(()=>{run()});
+                        break;
+                    case "3":
+                        functions.showAll(rl,"Select an expense to update",functions.getJSON(expensesList),["id","name","desc","amount"]).then((id)=>{functions.update(rl,expensesList,categoryList,Number(id),"expense").then(()=>{run()})});
+                        break;
                     case "5":
                         run();
                     default:
@@ -49,8 +53,10 @@ async function run() {
                         addCategory();
                         break;
                     case "2":
-                        askUser("Enter any value to return to menu",functions.getJSON(categoryList),["id","name"]).then(()=>{run()});
-
+                        functions.showAll(rl,"Enter any value to return to menu",functions.getJSON(categoryList),["id","name"]).then(()=>{run()});
+                        break;
+                    case "3":
+                        functions.showAll(rl,"Select a category to update",functions.getJSON(categoryList),["id","name"]).then((id)=>{functions.update(rl,categoryList,categoryList,Number(id),"category").then(()=>{run()})});
                     default:
                         break;
                 }
@@ -68,18 +74,17 @@ async function run() {
 })
 }
 
-async function askUser(question,options=[],properties=[]) {
+async function askUser(question) {
+    console.clear();
     return new Promise((resolve)=>{
-        rl.question(`${question}\n${options.length > 0 ? "\n"+ options.map(object=>{return functions.getProperties(object,properties)}).join("\n")+"\n":""}`,
-            (answer)=>{resolve(answer)
-        })
+        rl.question(question+"\n",(answer)=>{resolve(answer)})
     })
 }
 async function addExpense() {
     console.clear();
     let expName = await askUser("Write the name of the new expense");
     let expDesc = await askUser("Write a description for the new expense");
-    let expCat = await askUser("select a category(number) for the new expense",functions.getJSON(categoryList),["id","name"]);
+    let expCat = await functions.showAll(rl,"select a category(number) for the new expense",functions.getJSON(categoryList),["id","name"]);
     let expAmount = await askUser("Write the amount($) of the new expense");
     let expense = new expenseImports.Expense(expName,expDesc,expCat,expAmount);
     functions.add(expensesList,expense,"Expense")
