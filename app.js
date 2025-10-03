@@ -15,6 +15,7 @@ const rl = readline.createInterface({
 async function run() {
     if (!fs.existsSync('./data')) {
         fs.mkdirSync('./data')
+    }else{
         if (!fs.existsSync(expensesList)) {
         fs.writeFile(expensesList,"[]",()=>{})   
         }
@@ -38,6 +39,9 @@ async function run() {
                     case "3":
                         functions.showAll(rl,"Select an expense to update",functions.getJSON(expensesList),["id","name","desc","amount"]).then((id)=>{functions.update(rl,expensesList,categoryList,Number(id),"expense").then(()=>{run()})});
                         break;
+                    case "4":
+                        functions.showAll(rl,"Select an expense to delete",functions.getJSON(expensesList),["id","name","desc","idcategory","amount"],categoryList).then((id)=>{functions.deleteObj(expensesList,Number(id),"expense").then(()=>{run()})});
+                        break;
                     case "5":
                         run();
                     default:
@@ -57,6 +61,12 @@ async function run() {
                         break;
                     case "3":
                         functions.showAll(rl,"Select a category to update",functions.getJSON(categoryList),["id","name"]).then((id)=>{functions.update(rl,categoryList,categoryList,Number(id),"category").then(()=>{run()})});
+                        break;
+                    case "4":
+                        functions.showAll(rl,"Select a category to delete",functions.getJSON(categoryList),["id","name"],categoryList).then((id)=>{functions.deleteObj(categoryList,Number(id),"category").then(()=>{run()})});
+                        break;
+                    case "5":
+                        run();
                     default:
                         break;
                 }

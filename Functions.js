@@ -78,4 +78,24 @@ function update(rl,file,fileCat,id,element){
         });
     })
 }
-module.exports = {generateId,add,getJSON,getProperties,update,showAll}
+
+async function deleteObj(file,id,element){
+    return new Promise((resolve)=>{
+        const data = getJSON(file);
+        let found = data.find(object =>object.id == id);
+        let newArray = []
+        for (let i = 0; i < data.length; i++) {
+            if (data[i]== found) {
+                null;
+            }else{
+             newArray.push(data[i]);
+            }
+        }
+        fs.writeFile(file,JSON.stringify(newArray),() => {
+            console.log(`${element} deleted correctly`);
+            setTimeout(() => { resolve() }, 2000);
+        }) 
+    })  
+}
+
+module.exports = {generateId,add,getJSON,getProperties,update,showAll,deleteObj}
